@@ -1,0 +1,8 @@
+[workspace]
+resolver = "2"
+members = [ "apps/*"]
+
+
+[workspace.dependencies]
+kendall = {path = "../kendall/crates/kendall"}
+kendall-logger = {path = "../kendall/crates/kendall-logger"}
