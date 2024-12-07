@@ -6,7 +6,6 @@ use mm1::common::log::*;
 use mm1::core::context::{dispatch, Ask, InitDone, Quit, Recv, Start, Stop, Tell, Watching};
 use mm1::core::prim::AnyError;
 use mm1::proto::system;
-use mm1::runtime::config::RtConfig;
 use mm1::runtime::{Local, Rt};
 use tokio::io::{AsyncBufReadExt, BufReader};
 
@@ -225,10 +224,9 @@ async fn main() {
                 .unwrap(),
         }
     });
-    let rt_config: RtConfig = serde_yaml::from_str(
+    let rt_config = serde_yaml::from_str(
         r#"
-            subnet_address: aaaaaa0000000000/40
-            actor_netmask: 52
+            subnet_address: aaaaaa0000000000/32
         "#,
     )
     .expect("parse-config error");
