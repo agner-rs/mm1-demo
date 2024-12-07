@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-kendall.workspace = true
-kendall-logger.workspace = true
+mm1.workspace = true
+mm1-logger.workspace = true
 thiserror = "^2"
 tokio = {version = "^1", features = ["rt","macros", "rt-multi-thread", "net", "io-util"]}

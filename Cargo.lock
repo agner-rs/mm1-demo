@@ -101,8 +101,10 @@ dependencies = [
 name = "echo-ring"
 version = "0.1.0"
 dependencies = [
- "kendall",
- "kendall-logger",
+ "futures",
+ "mm1",
+ "mm1-logger",
+ "serde_yaml",
  "thiserror",
  "tokio",
 ]
@@ -112,6 +114,12 @@ name = "either"
 version = "1.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "60b1af1c220855b6ceac025d3f6ecdd2b7c4894bfe9cd9bda4fbb4bc7c0d4cf0"
+
+[[package]]
+name = "equivalent"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 
 [[package]]
 name = "futures"
@@ -209,6 +217,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "07e28edb80900c19c28f1072f2e8aeca7fa06b23cd4169cefe1af5aa3260783f"
 
 [[package]]
+name = "hashbrown"
+version = "0.15.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bf151400ff0baff5465007dd2f3e717f3fe502074ca563069ce3a6629d07b289"
+
+[[package]]
 name = "heck"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -227,140 +241,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "kendall"
-version = "0.1.0"
+name = "indexmap"
+version = "2.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "62f822373a4fe84d4bb149bf54e584a7f4abec90e072ed49cda0edea5b95471f"
 dependencies = [
- "kendall-address",
- "kendall-common",
- "kendall-core",
- "kendall-node",
- "kendall-proto",
- "kendall-proto-sup",
- "kendall-proto-system",
- "kendall-sup",
+ "equivalent",
+ "hashbrown",
 ]
 
 [[package]]
-name = "kendall-address"
-version = "0.1.0"
-dependencies = [
- "either",
- "kendall-common",
- "parking_lot",
- "serde",
- "thiserror",
-]
-
-[[package]]
-name = "kendall-common"
-version = "0.1.0"
-dependencies = [
- "pin-project",
- "thiserror",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "kendall-core"
-version = "0.1.0"
-dependencies = [
- "either",
- "futures",
- "kendall-address",
- "kendall-common",
- "kendall-proc-macros",
- "kendall-proto",
- "kendall-proto-system",
- "serde",
- "thiserror",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "kendall-logger"
-version = "0.1.0"
-dependencies = [
- "serde",
- "structopt",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "kendall-node"
-version = "0.1.0"
-dependencies = [
- "either",
- "futures",
- "kendall-address",
- "kendall-common",
- "kendall-core",
- "kendall-proc-macros",
- "kendall-proto",
- "kendall-proto-system",
- "parking_lot",
- "pin-project",
- "scc",
- "serde",
- "thiserror",
- "tokio",
- "tracing",
-]
-
-[[package]]
-name = "kendall-proc-macros"
-version = "0.1.0"
-dependencies = [
- "either",
- "proc-macro2",
- "quote",
- "syn 2.0.90",
-]
-
-[[package]]
-name = "kendall-proto"
-version = "0.1.0"
-dependencies = [
- "either",
- "kendall-common",
- "kendall-proc-macros",
- "parking_lot",
-]
-
-[[package]]
-name = "kendall-proto-sup"
-version = "0.1.0"
-dependencies = [
- "kendall-address",
- "kendall-common",
- "kendall-proto",
- "kendall-proto-system",
-]
-
-[[package]]
-name = "kendall-proto-system"
-version = "0.1.0"
-dependencies = [
- "kendall-address",
- "kendall-common",
- "kendall-proto",
-]
-
-[[package]]
-name = "kendall-sup"
-version = "0.1.0"
-dependencies = [
- "kendall-address",
- "kendall-common",
- "kendall-core",
- "kendall-proto",
- "kendall-proto-sup",
- "kendall-proto-system",
- "parking_lot",
- "thiserror",
-]
+name = "itoa"
+version = "1.0.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d75a2a4b1b190afb6f5425f10f6a8f959d2ea0b9c2b1d79553551850539e4674"
 
 [[package]]
 name = "lazy_static"
@@ -414,6 +308,142 @@ dependencies = [
  "libc",
  "wasi",
  "windows-sys",
+]
+
+[[package]]
+name = "mm1"
+version = "0.5.0"
+dependencies = [
+ "mm1-address",
+ "mm1-common",
+ "mm1-core",
+ "mm1-node",
+ "mm1-proto",
+ "mm1-proto-sup",
+ "mm1-proto-system",
+ "mm1-sup",
+]
+
+[[package]]
+name = "mm1-address"
+version = "0.5.0"
+dependencies = [
+ "either",
+ "mm1-common",
+ "parking_lot",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "mm1-common"
+version = "0.5.0"
+dependencies = [
+ "pin-project",
+ "thiserror",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "mm1-core"
+version = "0.5.0"
+dependencies = [
+ "either",
+ "futures",
+ "mm1-address",
+ "mm1-common",
+ "mm1-proc-macros",
+ "mm1-proto",
+ "mm1-proto-system",
+ "serde",
+ "thiserror",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "mm1-logger"
+version = "0.5.0"
+dependencies = [
+ "serde",
+ "structopt",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "mm1-node"
+version = "0.5.0"
+dependencies = [
+ "either",
+ "futures",
+ "mm1-address",
+ "mm1-common",
+ "mm1-core",
+ "mm1-proc-macros",
+ "mm1-proto",
+ "mm1-proto-system",
+ "parking_lot",
+ "pin-project",
+ "scc",
+ "serde",
+ "thiserror",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "mm1-proc-macros"
+version = "0.5.0"
+dependencies = [
+ "either",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.90",
+]
+
+[[package]]
+name = "mm1-proto"
+version = "0.5.0"
+dependencies = [
+ "either",
+ "mm1-common",
+ "mm1-proc-macros",
+ "parking_lot",
+]
+
+[[package]]
+name = "mm1-proto-sup"
+version = "0.5.0"
+dependencies = [
+ "mm1-address",
+ "mm1-common",
+ "mm1-proto",
+ "mm1-proto-system",
+]
+
+[[package]]
+name = "mm1-proto-system"
+version = "0.5.0"
+dependencies = [
+ "mm1-address",
+ "mm1-common",
+ "mm1-proto",
+]
+
+[[package]]
+name = "mm1-sup"
+version = "0.5.0"
+dependencies = [
+ "mm1-address",
+ "mm1-common",
+ "mm1-core",
+ "mm1-proto",
+ "mm1-proto-sup",
+ "mm1-proto-system",
+ "parking_lot",
+ "thiserror",
 ]
 
 [[package]]
@@ -560,6 +590,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "719b953e2095829ee67db738b3bfa9fa368c94900df327b3f07fe6e794d2fe1f"
 
 [[package]]
+name = "ryu"
+version = "1.0.18"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f3cb5ba0dc43242ce17de99c180e96db90b235b8a9fdc9543c96d2209116bd9f"
+
+[[package]]
 name = "scc"
 version = "2.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -601,6 +637,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_yaml"
+version = "0.9.34+deprecated"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a8b1a1a2ebf674015cc02edccce75287f1a0130d394307b36743c2f5d504b47"
+dependencies = [
+ "indexmap",
+ "itoa",
+ "ryu",
+ "serde",
+ "unsafe-libyaml",
+]
+
+[[package]]
 name = "sharded-slab"
 version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -613,8 +662,8 @@ dependencies = [
 name = "simple-group-chat"
 version = "0.1.0"
 dependencies = [
- "kendall",
- "kendall-logger",
+ "mm1",
+ "mm1-logger",
  "thiserror",
  "tokio",
 ]
@@ -836,6 +885,12 @@ name = "unicode-width"
 version = "0.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7dd6e30e90baa6f72411720665d41d89b9a3d039dc45b8faea1ddd07f617f6af"
+
+[[package]]
+name = "unsafe-libyaml"
+version = "0.2.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "673aac59facbab8a9007c7f6108d11f63b603f7cabff99fabf650fea5c32b861"
 
 [[package]]
 name = "valuable"

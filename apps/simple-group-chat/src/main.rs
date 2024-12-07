@@ -3,17 +3,17 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::Duration;
 
-use kendall::address::address::Address;
-use kendall::common::log::*;
-use kendall::core::context::{
+use mm1::address::address::Address;
+use mm1::common::log::*;
+use mm1::core::context::{
     dispatch, Ask, InitDone, Linking, Quit, Recv, Start, Stop, Tell, Watching,
 };
-use kendall::core::prim::AnyError;
-use kendall::proto::sup::uniform;
-use kendall::proto::system;
-use kendall::runtime::{Local, Rt};
-use kendall::sup::common::child_spec::{ChildSpec, ChildTimeouts, ChildType, InitType};
-use kendall::sup::uniform::UniformSup;
+use mm1::core::prim::AnyError;
+use mm1::proto::sup::uniform;
+use mm1::proto::system;
+use mm1::runtime::{Local, Rt};
+use mm1::sup::common::child_spec::{ChildSpec, ChildTimeouts, ChildType, InitType};
+use mm1::sup::uniform::UniformSup;
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
 
@@ -21,7 +21,7 @@ mod protocol {
     use std::net::SocketAddr;
     use std::sync::Arc;
 
-    use kendall::address::address::Address;
+    use mm1::address::address::Address;
 
     pub struct Join {
         pub reply_to:  Address,
@@ -216,7 +216,7 @@ async fn conn_sup<C>(ctx: &mut C, room: Address) -> Result<(), AnyError>
 where
     C: Quit + InitDone<Local> + Start<Local> + Stop<Local> + Watching<Local> + Linking<Local>,
 {
-    let factory = kendall::sup::common::factory::Func::new(move |tcp_stream| {
+    let factory = mm1::sup::common::factory::Func::new(move |tcp_stream| {
         Local::actor((conn, (room, tcp_stream)))
     });
     let child_spec = ChildSpec {
@@ -229,7 +229,7 @@ where
         },
     };
     let sup_spec = UniformSup::new(child_spec);
-    kendall::sup::uniform::uniform_sup(ctx, sup_spec).await?;
+    mm1::sup::uniform::uniform_sup(ctx, sup_spec).await?;
     Ok(())
 }
 
@@ -260,12 +260,12 @@ where
 
 #[tokio::main]
 async fn main() {
-    let _ = kendall_logger::init(&{
-        use kendall_logger::*;
+    let _ = mm1_logger::init(&{
+        use mm1_logger::*;
 
         LoggingConfig {
             min_log_level:     Level::INFO,
-            log_target_filter: ["kendall_node::*=INFO", "simple_group_chat=DEBUG"]
+            log_target_filter: ["mm1_node::*=INFO", "simple_group_chat=DEBUG"]
                 .into_iter()
                 .map(|s| s.parse())
                 .collect::<Result<Vec<_>, _>>()
