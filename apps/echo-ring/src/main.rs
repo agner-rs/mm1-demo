@@ -210,8 +210,7 @@ where
     }
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
     let _ = mm1_logger::init(&{
         use mm1_logger::*;
 
@@ -233,7 +232,6 @@ async fn main() {
     Rt::create(rt_config)
         .expect("Rt::create")
         .run(Local::actor(main_actor))
-        .await
         .expect("Rt::run");
 }
 

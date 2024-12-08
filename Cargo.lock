@@ -3,6 +3,18 @@
 version = 4
 
 [[package]]
+name = "actor-hierarchy"
+version = "0.1.0"
+dependencies = [
+ "futures",
+ "mm1",
+ "mm1-logger",
+ "serde_yaml",
+ "thiserror",
+ "tokio",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.24.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -32,7 +44,7 @@ version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d9b39be18770d11421cdb1b9947a45dd3f37e93092cbf377614828a319d5fee8"
 dependencies = [
- "hermit-abi",
+ "hermit-abi 0.1.19",
  "libc",
  "winapi",
 ]
@@ -241,6 +253,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "hermit-abi"
+version = "0.3.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d231dfb89cfffdbc30e7fc41579ed6066ad03abda9e567ccafae602b97ec5024"
+
+[[package]]
 name = "indexmap"
 version = "2.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -312,7 +330,9 @@ dependencies = [
 
 [[package]]
 name = "mm1"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8112624c26683b42faec3fd30610397e1a533433b8a856a0a8fc7d4e49659b37"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -326,7 +346,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-address"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c2479e6d24c7a420e6ce8af9541fb2336be2ec6b58721d5f2a83402cc7be9c9c"
 dependencies = [
  "either",
  "mm1-common",
@@ -337,7 +359,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-common"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0d3a063c4684285a809dc8fe3b72b73e3dd97e9fc44f070476c57d9edd2709e2"
 dependencies = [
  "pin-project",
  "thiserror",
@@ -347,7 +371,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-core"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c3b455192dee9b09004a2bffb3e25ab4e0e3eb3a7618978c33d7bd80c1633f61"
 dependencies = [
  "either",
  "futures",
@@ -364,7 +390,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-logger"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "62c0173924035673016aaf35970b57684d9d917202bcc90103c0612df5e13e1b"
 dependencies = [
  "serde",
  "structopt",
@@ -374,7 +402,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-node"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "098e9ab134afd7ab183a3b870c3508292fbd0b2c2851a73c5e50ceebf70df93d"
 dependencies = [
  "either",
  "futures",
@@ -384,6 +414,7 @@ dependencies = [
  "mm1-proc-macros",
  "mm1-proto",
  "mm1-proto-system",
+ "num_cpus",
  "parking_lot",
  "pin-project",
  "scc",
@@ -395,7 +426,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proc-macros"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "089ba1af3efa6b318464bbf2f864f2d57c9c9a93696021265b9ab76361db2f61"
 dependencies = [
  "either",
  "proc-macro2",
@@ -405,7 +438,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proto"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ea59073a525c325ccee3043bd453d8b56addcc934d34f4d80305df513cbfb00e"
 dependencies = [
  "either",
  "mm1-common",
@@ -415,7 +450,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proto-sup"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98acf24c1bcb6b697ba8af18af88f582a5249d389b591167dd86841769a99efd"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -425,7 +462,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proto-system"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d0e969ac1eb7db79a10faa4489a78adbd2b0c4dea7fc8dbeb4ea8d87a856f52"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -434,7 +473,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-sup"
-version = "0.5.0"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e74735106fe96b1cd5260bdc02f567ac49019f512f6b349d3c90aa176cf85c1e"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -454,6 +495,16 @@ checksum = "77a8165726e8236064dbb45459242600304b42a5ea24ee2948e18e023bf7ba84"
 dependencies = [
  "overload",
  "winapi",
+]
+
+[[package]]
+name = "num_cpus"
+version = "1.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4161fcb6d602d4d2081af7c3a45852d875a03dd337a6bfdd6e06407b61342a43"
+dependencies = [
+ "hermit-abi 0.3.9",
+ "libc",
 ]
 
 [[package]]

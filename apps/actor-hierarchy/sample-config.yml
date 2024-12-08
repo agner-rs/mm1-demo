@@ -1,0 +1,30 @@
+
+runtime:
+  default:
+    worker_threads: 2
+  
+  one:
+    worker_threads: 1
+  
+  two:
+    worker_threads: 2
+  
+  three:
+    worker_threads: 3
+
+actor:
+  inbox_size: 128
+  fork_inbox_size: 16
+  /:
+    _:
+      runtime: three
+      /:
+        actor_hierarchy::child_1:
+          runtime: one
+          /:
+            actor_hierarchy::child_a:
+              runtime: three
+        actor_hierarchy::child_2:
+          runtime: two
+    
+
