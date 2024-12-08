@@ -226,7 +226,9 @@ fn main() {
     });
     let rt_config = serde_yaml::from_str(
         r#"
-            subnet_address: aaaaaa0000000000/32
+            subnet: <cafe:>/16
+            actor:
+                netmask: 48
         "#,
     )
     .expect("parse-config error");
@@ -238,10 +240,18 @@ fn main() {
 
 mod protocol {
     use mm1::address::Address;
+    use mm1::proto::message;
 
+    #[derive(Debug)]
+    #[message]
     pub struct InputEof;
+
+    #[derive(Debug)]
+    #[message]
     pub struct InputLine(pub String);
 
+    #[derive(Debug)]
+    #[message]
     pub struct Request {
         pub reply_to: Address,
     }

@@ -1,3 +1,4 @@
+subnet: <cafe:>/16
 
 runtime:
   default:

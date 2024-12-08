@@ -9,7 +9,7 @@ use mm1::common::log::*;
 use mm1::core::context::{Ask, InitDone, Linking, Quit, Recv, Start, Stop, Tell, Watching};
 use mm1::core::envelope::dispatch;
 use mm1::proto::sup::uniform;
-use mm1::proto::system;
+use mm1::proto::{system, Unique};
 use mm1::runtime::{Local, Rt};
 use mm1::sup::common::{ChildSpec, ChildTimeouts, ChildType, InitType};
 use mm1::sup::uniform::UniformSup;
@@ -21,22 +21,27 @@ mod protocol {
     use std::sync::Arc;
 
     use mm1::address::Address;
+    use mm1::proto::message;
 
+    #[message]
     pub struct Join {
         pub reply_to:  Address,
         pub member:    Address,
         pub peer_addr: SocketAddr,
     }
 
+    #[message]
     pub struct Joined {
         pub history: Vec<Arc<[u8]>>,
     }
 
+    #[message]
     pub struct Post {
         pub reply_to: Address,
         pub message:  Arc<[u8]>,
     }
 
+    #[message]
     pub struct Message {
         pub message: Arc<[u8]>,
     }
@@ -109,16 +114,20 @@ where
 
         let _ = ctx
             .ask(conn_sup, |reply_to| {
-                uniform::StartRequest { reply_to, args: io }
+                uniform::StartRequest {
+                    reply_to,
+                    args: Unique::new(io),
+                }
             })
             .await;
     }
 }
 
-async fn conn<C>(ctx: &mut C, room: Address, io: TcpStream) -> Result<(), AnyError>
+async fn conn<C>(ctx: &mut C, room: Address, io: Unique<TcpStream>) -> Result<(), AnyError>
 where
     C: Recv + InitDone<Local> + Ask + Quit,
 {
+    let io = io.take().expect("stolen IO");
     async fn upstream<C>(
         ctx_up: &mut C,
         room: Address,
