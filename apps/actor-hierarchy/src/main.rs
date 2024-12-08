@@ -1,9 +1,9 @@
 use std::io::Read;
 use std::time::Duration;
 
+use mm1::common::error::AnyError;
 use mm1::common::log::info;
 use mm1::core::context::{InitDone, Recv, Start};
-use mm1::core::prim::AnyError;
 use mm1::runtime::{Local, Rt};
 
 fn main() -> Result<(), AnyError> {
@@ -34,8 +34,10 @@ where
     C: Start<Local>,
 {
     info!("main_actor @ {:?}", std::thread::current().name());
-    ctx.start(Local::actor(child_1), false, Duration::from_millis(1)).await?;
-    ctx.start(Local::actor(child_2), false, Duration::from_millis(1)).await?;
+    ctx.start(Local::actor(child_1), false, Duration::from_millis(1))
+        .await?;
+    ctx.start(Local::actor(child_2), false, Duration::from_millis(1))
+        .await?;
     Ok(())
 }
 
@@ -45,12 +47,15 @@ where
 {
     info!("1 @ {:?}", std::thread::current().name());
 
-    ctx.start(Local::actor(child_a), false, Duration::from_millis(1)).await?;
-    ctx.start(Local::actor(child_b), false, Duration::from_millis(1)).await?;
-    ctx.start(Local::actor(child_c), false, Duration::from_millis(1)).await?;
+    ctx.start(Local::actor(child_a), false, Duration::from_millis(1))
+        .await?;
+    ctx.start(Local::actor(child_b), false, Duration::from_millis(1))
+        .await?;
+    ctx.start(Local::actor(child_c), false, Duration::from_millis(1))
+        .await?;
 
     ctx.init_done(ctx.address()).await;
-    
+
     Ok(())
 }
 
@@ -60,17 +65,21 @@ where
 {
     info!("2 @ {:?}", std::thread::current().name());
 
-    ctx.start(Local::actor(child_a), false, Duration::from_millis(1)).await?;
-    ctx.start(Local::actor(child_b), false, Duration::from_millis(1)).await?;
-    ctx.start(Local::actor(child_c), false, Duration::from_millis(1)).await?;
+    ctx.start(Local::actor(child_a), false, Duration::from_millis(1))
+        .await?;
+    ctx.start(Local::actor(child_b), false, Duration::from_millis(1))
+        .await?;
+    ctx.start(Local::actor(child_c), false, Duration::from_millis(1))
+        .await?;
 
     ctx.init_done(ctx.address()).await;
-    
+
     Ok(())
 }
 
 async fn child_a<C>(ctx: &mut C) -> Result<(), AnyError>
-where C: InitDone<Local> + Recv
+where
+    C: InitDone<Local> + Recv,
 {
     info!("A @ {:?}", std::thread::current().name());
     ctx.init_done(ctx.address()).await;
@@ -78,7 +87,8 @@ where C: InitDone<Local> + Recv
 }
 
 async fn child_b<C>(ctx: &mut C) -> Result<(), AnyError>
-where C: InitDone<Local> + Recv
+where
+    C: InitDone<Local> + Recv,
 {
     info!("B @ {:?}", std::thread::current().name());
     ctx.init_done(ctx.address()).await;
@@ -86,7 +96,8 @@ where C: InitDone<Local> + Recv
 }
 
 async fn child_c<C>(ctx: &mut C) -> Result<(), AnyError>
-where C: InitDone<Local> + Recv
+where
+    C: InitDone<Local> + Recv,
 {
     info!("C @ {:?}", std::thread::current().name());
     ctx.init_done(ctx.address()).await;

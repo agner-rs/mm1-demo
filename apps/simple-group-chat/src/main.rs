@@ -3,16 +3,15 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::Duration;
 
-use mm1::address::address::Address;
+use mm1::address::Address;
+use mm1::common::error::AnyError;
 use mm1::common::log::*;
-use mm1::core::context::{
-    dispatch, Ask, InitDone, Linking, Quit, Recv, Start, Stop, Tell, Watching,
-};
-use mm1::core::prim::AnyError;
+use mm1::core::context::{Ask, InitDone, Linking, Quit, Recv, Start, Stop, Tell, Watching};
+use mm1::core::envelope::dispatch;
 use mm1::proto::sup::uniform;
 use mm1::proto::system;
 use mm1::runtime::{Local, Rt};
-use mm1::sup::common::child_spec::{ChildSpec, ChildTimeouts, ChildType, InitType};
+use mm1::sup::common::{ChildSpec, ChildTimeouts, ChildType, InitType};
 use mm1::sup::uniform::UniformSup;
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
@@ -21,7 +20,7 @@ mod protocol {
     use std::net::SocketAddr;
     use std::sync::Arc;
 
-    use mm1::address::address::Address;
+    use mm1::address::Address;
 
     pub struct Join {
         pub reply_to:  Address,
@@ -216,7 +215,7 @@ async fn conn_sup<C>(ctx: &mut C, room: Address) -> Result<(), AnyError>
 where
     C: Quit + InitDone<Local> + Start<Local> + Stop<Local> + Watching<Local> + Linking<Local>,
 {
-    let factory = mm1::sup::common::factory::Func::new(move |tcp_stream| {
+    let factory = mm1::sup::common::ActorFactoryMut::new(move |tcp_stream| {
         Local::actor((conn, (room, tcp_stream)))
     });
     let child_spec = ChildSpec {

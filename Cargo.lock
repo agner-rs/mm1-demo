@@ -330,9 +330,9 @@ dependencies = [
 
 [[package]]
 name = "mm1"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8112624c26683b42faec3fd30610397e1a533433b8a856a0a8fc7d4e49659b37"
+checksum = "e076e93470b117e1a22a5188af06fe8fdcd123d059236afd525cd9fa40a8b0e9"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -346,9 +346,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-address"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c2479e6d24c7a420e6ce8af9541fb2336be2ec6b58721d5f2a83402cc7be9c9c"
+checksum = "4a705075837ed33539c28113904ff91e73c2e499b7fd5d1fead6d4bd75e2b016"
 dependencies = [
  "either",
  "mm1-common",
@@ -359,9 +359,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-common"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d3a063c4684285a809dc8fe3b72b73e3dd97e9fc44f070476c57d9edd2709e2"
+checksum = "af941a5807570732d4d36f3573891c4d9c5c5aea5d4aa21d731a6b43d6670f18"
 dependencies = [
  "pin-project",
  "thiserror",
@@ -371,9 +371,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-core"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c3b455192dee9b09004a2bffb3e25ab4e0e3eb3a7618978c33d7bd80c1633f61"
+checksum = "d91aa7549059d2dde294a0259d17809e69f9d690676eb499e84fdca262037f0b"
 dependencies = [
  "either",
  "futures",
@@ -390,9 +390,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-logger"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62c0173924035673016aaf35970b57684d9d917202bcc90103c0612df5e13e1b"
+checksum = "1e693437b9d5ddf01be1b05cb2ce6bd6b83295680ba4e92faa9284bcaf3d789c"
 dependencies = [
  "serde",
  "structopt",
@@ -402,9 +402,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-node"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "098e9ab134afd7ab183a3b870c3508292fbd0b2c2851a73c5e50ceebf70df93d"
+checksum = "bfd5ced4233692058ada2367c612cc56a8b485e7c652f6fec5403fffff695624"
 dependencies = [
  "either",
  "futures",
@@ -426,9 +426,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proc-macros"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "089ba1af3efa6b318464bbf2f864f2d57c9c9a93696021265b9ab76361db2f61"
+checksum = "8062a1fed4e388531e716faf9a35b495e55646fbf3a23b497f51ab8bf34cd6c8"
 dependencies = [
  "either",
  "proc-macro2",
@@ -438,9 +438,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proto"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ea59073a525c325ccee3043bd453d8b56addcc934d34f4d80305df513cbfb00e"
+checksum = "6c317044b7e9dafc4b3ae918c39287df528e7702373eda67603d761bf260084c"
 dependencies = [
  "either",
  "mm1-common",
@@ -450,9 +450,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proto-sup"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "98acf24c1bcb6b697ba8af18af88f582a5249d389b591167dd86841769a99efd"
+checksum = "d465d8b61993c1350e6bd81d98445dd0cbe8ddd0601e8e36b3ea01920da62441"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -462,9 +462,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proto-system"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9d0e969ac1eb7db79a10faa4489a78adbd2b0c4dea7fc8dbeb4ea8d87a856f52"
+checksum = "637c4d0097fed39e968dbfaf37ffe6f32099b0749c1139ee12e431323efcb133"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -473,9 +473,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-sup"
-version = "0.5.2"
+version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e74735106fe96b1cd5260bdc02f567ac49019f512f6b349d3c90aa176cf85c1e"
+checksum = "bbf8348d0af16cf24c0e676fb2f76a773beecf2030d1f4afd1cb070a2dcfb13d"
 dependencies = [
  "mm1-address",
  "mm1-common",

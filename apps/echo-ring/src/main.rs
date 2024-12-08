@@ -1,10 +1,11 @@
 use std::collections::VecDeque;
 use std::time::{Duration, Instant};
 
-use mm1::address::address::Address;
+use mm1::address::Address;
+use mm1::common::error::AnyError;
 use mm1::common::log::*;
-use mm1::core::context::{dispatch, Ask, InitDone, Quit, Recv, Start, Stop, Tell, Watching};
-use mm1::core::prim::AnyError;
+use mm1::core::context::{Ask, InitDone, Quit, Recv, Start, Stop, Tell, Watching};
+use mm1::core::envelope::dispatch;
 use mm1::proto::system;
 use mm1::runtime::{Local, Rt};
 use tokio::io::{AsyncBufReadExt, BufReader};
@@ -236,7 +237,7 @@ fn main() {
 }
 
 mod protocol {
-    use mm1::address::address::Address;
+    use mm1::address::Address;
 
     pub struct InputEof;
     pub struct InputLine(pub String);
