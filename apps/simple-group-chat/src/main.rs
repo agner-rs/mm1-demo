@@ -6,12 +6,12 @@ use std::time::Duration;
 use mm1::address::Address;
 use mm1::common::error::AnyError;
 use mm1::common::log::*;
-use mm1::core::context::{Ask, InitDone, Linking, Quit, Recv, Start, Stop, Tell, Watching};
+use mm1::core::context::{Ask, Fork, InitDone, Linking, Quit, Recv, Start, Stop, Tell, Watching};
 use mm1::core::envelope::dispatch;
 use mm1::proto::sup::uniform;
 use mm1::proto::{system, Unique};
 use mm1::runtime::{Local, Rt};
-use mm1::sup::common::{ChildSpec, ChildTimeouts, ChildType, InitType};
+use mm1::sup::common::{ChildSpec, ChildType, InitType};
 use mm1::sup::uniform::UniformSup;
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, AsyncWriteExt};
 use tokio::net::{TcpListener, TcpStream};
@@ -57,7 +57,7 @@ struct Eof;
 
 async fn room<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: InitDone<Local> + Recv + Tell + Watching<Local>,
+    C: InitDone + Recv + Tell + Watching,
 {
     ctx.init_done(ctx.address()).await;
 
@@ -105,7 +105,7 @@ where
 
 async fn acceptor<C>(ctx: &mut C, conn_sup: Address, bind_addr: SocketAddr) -> Result<(), AnyError>
 where
-    C: Ask + InitDone<Local>,
+    C: Ask + InitDone,
 {
     let tcp_listener = TcpListener::bind(bind_addr).await?;
     ctx.init_done(ctx.address()).await;
@@ -125,7 +125,7 @@ where
 
 async fn conn<C>(ctx: &mut C, room: Address, io: Unique<TcpStream>) -> Result<(), AnyError>
 where
-    C: Recv + InitDone<Local> + Ask + Quit,
+    C: Recv + InitDone + Ask + Quit,
 {
     let io = io.take().expect("stolen IO");
     async fn upstream<C>(
@@ -222,19 +222,18 @@ where
 
 async fn conn_sup<C>(ctx: &mut C, room: Address) -> Result<(), AnyError>
 where
-    C: Quit + InitDone<Local> + Start<Local> + Stop<Local> + Watching<Local> + Linking<Local>,
+    C: Quit + InitDone + Start<Local> + Stop + Watching + Linking + Fork + Recv + Tell,
 {
-    let factory = mm1::sup::common::ActorFactoryMut::new(move |tcp_stream| {
+    let launcher = mm1::sup::common::ActorFactoryMut::new(move |tcp_stream| {
         Local::actor((conn, (room, tcp_stream)))
     });
     let child_spec = ChildSpec {
-        factory,
+        launcher,
         child_type: ChildType::Temporary,
-        init_type: InitType::WithAck,
-        timeouts: ChildTimeouts {
+        init_type: InitType::WithAck {
             start_timeout: Duration::from_millis(100),
-            stop_timeout:  Duration::from_secs(5),
         },
+        stop_timeout: Duration::from_secs(5),
     };
     let sup_spec = UniformSup::new(child_spec);
     mm1::sup::uniform::uniform_sup(ctx, sup_spec).await?;

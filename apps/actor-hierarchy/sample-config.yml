@@ -1,5 +1,9 @@
 subnet: <cafe:>/16
 
+subnets:
+  default:
+    network: <cafe:>/16
+
 runtime:
   default:
     worker_threads: 2

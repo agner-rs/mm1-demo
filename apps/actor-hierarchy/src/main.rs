@@ -43,7 +43,7 @@ where
 
 async fn child_1<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: Start<Local> + InitDone<Local> + Recv,
+    C: Start<Local> + InitDone + Recv,
 {
     info!("1 @ {:?}", std::thread::current().name());
 
@@ -61,7 +61,7 @@ where
 
 async fn child_2<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: Start<Local> + InitDone<Local> + Recv,
+    C: Start<Local> + InitDone + Recv,
 {
     info!("2 @ {:?}", std::thread::current().name());
 
@@ -79,7 +79,7 @@ where
 
 async fn child_a<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: InitDone<Local> + Recv,
+    C: InitDone + Recv,
 {
     info!("A @ {:?}", std::thread::current().name());
     ctx.init_done(ctx.address()).await;
@@ -88,7 +88,7 @@ where
 
 async fn child_b<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: InitDone<Local> + Recv,
+    C: InitDone + Recv,
 {
     info!("B @ {:?}", std::thread::current().name());
     ctx.init_done(ctx.address()).await;
@@ -97,7 +97,7 @@ where
 
 async fn child_c<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: InitDone<Local> + Recv,
+    C: InitDone + Recv,
 {
     info!("C @ {:?}", std::thread::current().name());
     ctx.init_done(ctx.address()).await;
