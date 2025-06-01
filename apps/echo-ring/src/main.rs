@@ -130,14 +130,10 @@ where
                                         let mut response_times = Vec::<Duration>::with_capacity(n);
                                         for _ in 0..n {
                                             let t0 = Instant::now();
-                                            if let Err(e) = ctx
-                                                .ask(head, |reply_to| {
-                                                    protocol::Request { reply_to }
-                                                })
-                                                .await
-                                            {
-                                                return Err(e)
-                                            }
+                                            ctx.ask(head, |reply_to| {
+                                                protocol::Request { reply_to }
+                                            })
+                                            .await?;
                                             let dt = t0.elapsed();
                                             response_times.push(dt);
                                         }
@@ -146,7 +142,7 @@ where
                                 }))
                                 .await
                                 .into_iter()
-                                .collect::<Result<Vec<Vec<Duration>>, _>>()?
+                                .collect::<Result<Vec<Vec<Duration>>, AnyError>>()?
                                 .into_iter()
                                 .flatten()
                                 .collect::<Vec<_>>();
