@@ -6,7 +6,9 @@ use std::time::Duration;
 use mm1::address::Address;
 use mm1::common::error::AnyError;
 use mm1::common::log::*;
-use mm1::core::context::{Ask, Fork, InitDone, Linking, Quit, Recv, Start, Stop, Tell, Watching};
+use mm1::core::context::{
+    Ask, Fork, InitDone, Linking, Messaging, Quit, Start, Stop, Tell, Watching,
+};
 use mm1::core::envelope::dispatch;
 use mm1::proto::sup::uniform;
 use mm1::proto::{system, Unique};
@@ -57,7 +59,7 @@ struct Eof;
 
 async fn room<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: InitDone + Recv + Tell + Watching,
+    C: InitDone + Messaging + Tell + Watching,
 {
     ctx.init_done(ctx.address()).await;
 
@@ -125,7 +127,7 @@ where
 
 async fn conn<C>(ctx: &mut C, room: Address, io: Unique<TcpStream>) -> Result<(), AnyError>
 where
-    C: Recv + InitDone + Ask + Quit,
+    C: Messaging + InitDone + Ask + Quit,
 {
     let io = io.take().expect("stolen IO");
     async fn upstream<C>(
@@ -153,7 +155,7 @@ where
         mut io_w: impl AsyncWrite + Unpin,
     ) -> Result<(), AnyError>
     where
-        C: Recv,
+        C: Messaging,
     {
         loop {
             let envelope = ctx_dn.recv().await?;
@@ -222,7 +224,7 @@ where
 
 async fn conn_sup<C>(ctx: &mut C, room: Address) -> Result<(), AnyError>
 where
-    C: Quit + InitDone + Start<Local> + Stop + Watching + Linking + Fork + Recv + Tell,
+    C: Quit + InitDone + Start<Local> + Stop + Watching + Linking + Fork + Messaging + Tell,
 {
     let launcher = mm1::sup::common::ActorFactoryMut::new(move |tcp_stream| {
         Local::actor((conn, (room, tcp_stream)))

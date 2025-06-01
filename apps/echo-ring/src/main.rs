@@ -4,7 +4,7 @@ use std::time::{Duration, Instant};
 use mm1::address::Address;
 use mm1::common::error::AnyError;
 use mm1::common::log::*;
-use mm1::core::context::{Ask, InitDone, Quit, Recv, Start, Stop, Tell, Watching};
+use mm1::core::context::{Ask, InitDone, Messaging, Quit, Start, Stop, Tell, Watching};
 use mm1::core::envelope::dispatch;
 use mm1::proto::system;
 use mm1::runtime::{Local, Rt};
@@ -12,7 +12,7 @@ use tokio::io::{AsyncBufReadExt, BufReader};
 
 async fn main_actor<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: Quit + Recv + Tell + Ask + Start<Local> + Stop + Watching,
+    C: Quit + Messaging + Tell + Ask + Start<Local> + Stop + Watching,
 {
     let mut nodes = VecDeque::<Address>::new();
 
@@ -183,7 +183,7 @@ where
 
 async fn node<C>(ctx: &mut C, relay_to: Option<Address>) -> Result<(), AnyError>
 where
-    C: InitDone + Recv + Tell + Watching,
+    C: InitDone + Messaging + Tell + Watching,
 {
     ctx.init_done(ctx.address()).await;
 

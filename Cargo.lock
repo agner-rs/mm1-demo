@@ -138,6 +138,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d0a5c400df2834b80a4c3327b3aad3a4c4cd4de0629063962b03235697506a28"
 
 [[package]]
+name = "derive_more"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "093242cf7570c207c83073cf82f79706fe7b8317e98620a47d5be7c3d8497678"
+dependencies = [
+ "derive_more-impl",
+]
+
+[[package]]
+name = "derive_more-impl"
+version = "2.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bda628edc44c4bb645fbe0f758797143e4e07926f7ebf4e9bdfbd3d2ce621df3"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.90",
+ "unicode-xid",
+]
+
+[[package]]
 name = "echo-ring"
 version = "0.1.0"
 dependencies = [
@@ -380,7 +401,9 @@ dependencies = [
 
 [[package]]
 name = "mm1"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ed4310a81d0bca537da0c1021d695a28f475dda0fb3937f43c4ba57df0ab961b"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -389,12 +412,16 @@ dependencies = [
  "mm1-proto",
  "mm1-proto-sup",
  "mm1-proto-system",
+ "mm1-proto-timer",
  "mm1-sup",
+ "mm1-timer",
 ]
 
 [[package]]
 name = "mm1-address"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cfc4aee0ba7968059526235da2f0c1a4829691536b7ada484403b3219a5b5096"
 dependencies = [
  "parking_lot",
  "serde",
@@ -403,7 +430,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-common"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8343275eb6348a105530df5fc5f59073e711dab7325742730a91b307b6aa9740"
 dependencies = [
  "mm1-proc-macros",
  "pin-project",
@@ -414,7 +443,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-core"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ca58c255a646e091f9d202b2546178931a6594d1b2ece585c8a679d82709ee7"
 dependencies = [
  "futures",
  "mm1-address",
@@ -428,9 +459,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-logger"
-version = "0.5.4"
+version = "0.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "25dbf5bea635af828746c7887b4a71f2653f7355941674905c96b28ca05bfd2a"
+checksum = "e93a951879c39bcb6af8ab22d5211ee2ab04b6d544c80429f2677ff796ecbd18"
 dependencies = [
  "serde",
  "structopt",
@@ -440,7 +471,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-node"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e0e7669b2220eb4296d88fc45b835c6a485721feb9443cc3a5d33d538b843b3b"
 dependencies = [
  "async-channel",
  "either",
@@ -461,7 +494,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proc-macros"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c778e7e97be09e309db1f2336eb48c8dbd22979c7ac3a1471951c7da49c3bab2"
 dependencies = [
  "either",
  "proc-macro2",
@@ -471,7 +506,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proto"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1f4d17865f4e4ea59c254b2a16511d52883d62c31cc9ae1e083a4c25011b687c"
 dependencies = [
  "mm1-proc-macros",
  "parking_lot",
@@ -479,7 +516,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proto-sup"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "33749ca3a5a0cb7b39ccf114acfbe578f6e7c3a6389ae43cf53effaa434a57d4"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -489,7 +528,9 @@ dependencies = [
 
 [[package]]
 name = "mm1-proto-system"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e402faec1b6d756d596065a1225d6cd86b121aa1fca7a6aaf61acfdb5025ed6c"
 dependencies = [
  "mm1-address",
  "mm1-common",
@@ -497,8 +538,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "mm1-proto-timer"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "afb631fda7d5a7527b87f6e2d252774fb5f7a6286d4df0d4075e030a2535dfa5"
+dependencies = [
+ "derive_more",
+ "mm1-proto",
+]
+
+[[package]]
 name = "mm1-sup"
-version = "0.5.4"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "80032e6b8e468ba21bde93e62747ffabeb1db610f57d096ccb6d7f6ba2478eb2"
 dependencies = [
  "either",
  "mm1-address",
@@ -508,6 +561,21 @@ dependencies = [
  "mm1-proto-sup",
  "mm1-proto-system",
  "parking_lot",
+ "thiserror",
+ "tokio",
+]
+
+[[package]]
+name = "mm1-timer"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d3f913544a46abcd0ecfba5de81275c41aa3250a4001f62ef04e00b2fe34c64d"
+dependencies = [
+ "futures",
+ "mm1-address",
+ "mm1-common",
+ "mm1-core",
+ "mm1-proto-timer",
  "thiserror",
  "tokio",
 ]
@@ -869,9 +937,9 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.45.0"
+version = "1.45.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2513ca694ef9ede0fb23fe71a4ee4107cb102b9dc1930f6d0fd77aae068ae165"
+checksum = "75ef51a33ef1da925cea3e4eb122833cb377c61439ca401b770f54902b806779"
 dependencies = [
  "backtrace",
  "bytes",
@@ -968,6 +1036,12 @@ name = "unicode-width"
 version = "0.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7dd6e30e90baa6f72411720665d41d89b9a3d039dc45b8faea1ddd07f617f6af"
+
+[[package]]
+name = "unicode-xid"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ebc1c04c71510c7f702b52b7c350734c9ff1295c464a03335b00bb84fc54f853"
 
 [[package]]
 name = "unsafe-libyaml"

@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use mm1::common::error::AnyError;
 use mm1::common::log::info;
-use mm1::core::context::{InitDone, Recv, Start};
+use mm1::core::context::{InitDone, Messaging, Start};
 use mm1::runtime::{Local, Rt};
 
 fn main() -> Result<(), AnyError> {
@@ -43,7 +43,7 @@ where
 
 async fn child_1<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: Start<Local> + InitDone + Recv,
+    C: Start<Local> + InitDone + Messaging,
 {
     info!("1 @ {:?}", std::thread::current().name());
 
@@ -61,7 +61,7 @@ where
 
 async fn child_2<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: Start<Local> + InitDone + Recv,
+    C: Start<Local> + InitDone + Messaging,
 {
     info!("2 @ {:?}", std::thread::current().name());
 
@@ -79,7 +79,7 @@ where
 
 async fn child_a<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: InitDone + Recv,
+    C: InitDone + Messaging,
 {
     info!("A @ {:?}", std::thread::current().name());
     ctx.init_done(ctx.address()).await;
@@ -88,7 +88,7 @@ where
 
 async fn child_b<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: InitDone + Recv,
+    C: InitDone + Messaging,
 {
     info!("B @ {:?}", std::thread::current().name());
     ctx.init_done(ctx.address()).await;
@@ -97,7 +97,7 @@ where
 
 async fn child_c<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: InitDone + Recv,
+    C: InitDone + Messaging,
 {
     info!("C @ {:?}", std::thread::current().name());
     ctx.init_done(ctx.address()).await;
