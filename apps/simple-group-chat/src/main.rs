@@ -4,11 +4,11 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use mm1::address::Address;
+use mm1::ask::proto::simple::Request;
+use mm1::ask::{Ask, Reply};
 use mm1::common::error::AnyError;
 use mm1::common::log::*;
-use mm1::core::context::{
-    Ask, Fork, InitDone, Linking, Messaging, Quit, Start, Stop, Tell, Watching,
-};
+use mm1::core::context::{Fork, InitDone, Linking, Messaging, Quit, Start, Stop, Tell, Watching};
 use mm1::core::envelope::dispatch;
 use mm1::proto::sup::uniform;
 use mm1::proto::{system, Unique};
@@ -27,7 +27,6 @@ mod protocol {
 
     #[message]
     pub struct Join {
-        pub reply_to:  Address,
         pub member:    Address,
         pub peer_addr: SocketAddr,
     }
@@ -39,8 +38,7 @@ mod protocol {
 
     #[message]
     pub struct Post {
-        pub reply_to: Address,
-        pub message:  Arc<[u8]>,
+        pub message: Arc<[u8]>,
     }
 
     #[message]
@@ -59,7 +57,7 @@ struct Eof;
 
 async fn room<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: InitDone + Messaging + Tell + Watching,
+    C: InitDone + Messaging + Tell + Watching + Reply,
 {
     ctx.init_done(ctx.address()).await;
 
@@ -74,10 +72,9 @@ where
                 info!("left [member: {}]", peer);
                 members.remove(&peer);
             },
-            protocol::Join {
-                reply_to,
-                member,
-                peer_addr,
+            Request::<_> {
+                header: reply_to,
+                payload: protocol::Join { member, peer_addr },
             } => {
                 info!(
                     "join [reply-to: {}; member: {}; peer-addr: {}]",
@@ -88,9 +85,12 @@ where
                     ctx.unwatch(watch_ref).await;
                 }
                 let history: Vec<_> = history.iter().cloned().collect();
-                let _ = ctx.tell(reply_to, protocol::Joined { history }).await;
+                let _ = ctx.reply(reply_to, protocol::Joined { history }).await;
             },
-            protocol::Post { reply_to, message } => {
+            Request::<_> {
+                header: reply_to,
+                payload: protocol::Post { message },
+            } => {
                 for member in members.keys().copied() {
                     let message = message.clone();
                     let _ = ctx.tell(member, protocol::Message { message }).await;
@@ -99,7 +99,7 @@ where
                 if history.len() > 10 {
                     let _ = history.pop_front();
                 }
-                let _ = ctx.tell(reply_to, ()).await;
+                let _ = ctx.reply(reply_to, ()).await;
             },
         });
     }
@@ -114,20 +114,21 @@ where
     loop {
         let (io, _) = tcp_listener.accept().await?;
 
-        let _ = ctx
-            .ask(conn_sup, |reply_to| {
+        let _: uniform::StartResponse = ctx
+            .ask(
+                conn_sup,
                 uniform::StartRequest {
-                    reply_to,
                     args: Unique::new(io),
-                }
-            })
-            .await;
+                },
+                Duration::from_secs(3),
+            )
+            .await?;
     }
 }
 
 async fn conn<C>(ctx: &mut C, room: Address, io: Unique<TcpStream>) -> Result<(), AnyError>
 where
-    C: Messaging + InitDone + Ask + Quit,
+    C: Messaging + InitDone + Ask + Quit + Fork + Ask,
 {
     let io = io.take().expect("stolen IO");
     async fn upstream<C>(
@@ -146,7 +147,7 @@ where
             }
             let message: Arc<[u8]> = read_buf[..byte_count].into();
             ctx_up
-                .ask(room, move |reply_to| protocol::Post { reply_to, message })
+                .ask(room, protocol::Post { message }, Duration::from_secs(3))
                 .await?;
         }
     }
@@ -176,19 +177,16 @@ where
 
     let downstream_address = ctx_dn.address();
 
-    let response = ctx
-        .ask(room, |reply_to| {
+    let protocol::Joined { history } = ctx
+        .ask(
+            room,
             protocol::Join {
-                reply_to,
                 member: downstream_address,
                 peer_addr,
-            }
-        })
+            },
+            Duration::from_secs(3),
+        )
         .await?;
-
-    let history = dispatch!(match response {
-        protocol::Joined { history } => history,
-    });
 
     info!("joined: [history.len: {}]", history.len());
 

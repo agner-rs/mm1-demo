@@ -2,9 +2,11 @@ use std::collections::VecDeque;
 use std::time::{Duration, Instant};
 
 use mm1::address::Address;
+use mm1::ask::proto::simple::Request;
+use mm1::ask::{Ask, Reply};
 use mm1::common::error::AnyError;
 use mm1::common::log::*;
-use mm1::core::context::{Ask, InitDone, Messaging, Quit, Start, Stop, Tell, Watching};
+use mm1::core::context::{Fork, InitDone, Messaging, Quit, Start, Stop, Tell, Watching};
 use mm1::core::envelope::dispatch;
 use mm1::proto::system;
 use mm1::runtime::{Local, Rt};
@@ -12,7 +14,7 @@ use tokio::io::{AsyncBufReadExt, BufReader};
 
 async fn main_actor<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: Quit + Messaging + Tell + Ask + Start<Local> + Stop + Watching,
+    C: Quit + Messaging + Tell + Ask + Start<Local> + Stop + Watching + Fork,
 {
     let mut nodes = VecDeque::<Address>::new();
 
@@ -130,9 +132,11 @@ where
                                         let mut response_times = Vec::<Duration>::with_capacity(n);
                                         for _ in 0..n {
                                             let t0 = Instant::now();
-                                            ctx.ask(head, |reply_to| {
-                                                protocol::Request { reply_to }
-                                            })
+                                            ctx.ask(
+                                                head,
+                                                protocol::Request,
+                                                Duration::from_secs(5),
+                                            )
                                             .await?;
                                             let dt = t0.elapsed();
                                             response_times.push(dt);
@@ -179,7 +183,7 @@ where
 
 async fn node<C>(ctx: &mut C, relay_to: Option<Address>) -> Result<(), AnyError>
 where
-    C: InitDone + Messaging + Tell + Watching,
+    C: InitDone + Messaging + Tell + Reply + Watching,
 {
     ctx.init_done(ctx.address()).await;
 
@@ -191,7 +195,7 @@ where
                 system::Down { watch_ref, .. } if *watch_ref == w => {
                     break
                 },
-                req @ protocol::Request { .. } => {
+                req @ Request::<protocol::Request> { .. } => {
                     let _ = ctx.tell(relay_to, req).await;
                 },
             })
@@ -200,8 +204,11 @@ where
 
     loop {
         dispatch!(match ctx.recv().await? {
-            protocol::Request { reply_to } => {
-                let _ = ctx.tell(reply_to, ()).await;
+            Request::<_> {
+                header: reply_to,
+                payload: protocol::Request,
+            } => {
+                let _ = ctx.reply(reply_to, ()).await;
             },
         })
     }
@@ -235,7 +242,6 @@ fn main() {
 }
 
 mod protocol {
-    use mm1::address::Address;
     use mm1::proto::message;
 
     #[derive(Debug)]
@@ -248,7 +254,5 @@ mod protocol {
 
     #[derive(Debug)]
     #[message]
-    pub struct Request {
-        pub reply_to: Address,
-    }
+    pub struct Request;
 }
