@@ -9,6 +9,7 @@ use mm1::common::log::*;
 use mm1::core::context::{Fork, InitDone, Messaging, Quit, Start, Stop, Tell, Watching};
 use mm1::core::envelope::dispatch;
 use mm1::proto::system;
+use mm1::runnable;
 use mm1::runtime::{Local, Rt};
 use tokio::io::{AsyncBufReadExt, BufReader};
 
@@ -73,7 +74,7 @@ where
                             let relay_to = nodes.front().copied();
                             let node = ctx
                                 .start(
-                                    Local::actor((node, (relay_to,))),
+                                    runnable::local::boxed_from_fn((node, (relay_to,))),
                                     false,
                                     Duration::from_millis(1),
                                 )
@@ -237,7 +238,7 @@ fn main() {
     .expect("parse-config error");
     Rt::create(rt_config)
         .expect("Rt::create")
-        .run(Local::actor(main_actor))
+        .run(runnable::local::boxed_from_fn(main_actor))
         .expect("Rt::run");
 }
 

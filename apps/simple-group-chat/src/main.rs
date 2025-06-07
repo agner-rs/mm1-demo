@@ -12,6 +12,7 @@ use mm1::core::context::{Fork, InitDone, Linking, Messaging, Quit, Start, Stop, 
 use mm1::core::envelope::dispatch;
 use mm1::proto::sup::uniform;
 use mm1::proto::{system, Unique};
+use mm1::runnable;
 use mm1::runtime::{Local, Rt};
 use mm1::sup::common::{ChildSpec, ChildType, InitType};
 use mm1::sup::uniform::UniformSup;
@@ -225,7 +226,7 @@ where
     C: Quit + InitDone + Start<Local> + Stop + Watching + Linking + Fork + Messaging + Tell,
 {
     let launcher = mm1::sup::common::ActorFactoryMut::new(move |tcp_stream| {
-        Local::actor((conn, (room, tcp_stream)))
+        runnable::local::boxed_from_fn((conn, (room, tcp_stream)))
     });
     let child_spec = ChildSpec {
         launcher,
@@ -245,18 +246,25 @@ where
     C: Start<Local>,
 {
     let room = ctx
-        .start(Local::actor(room), true, Duration::from_millis(10))
+        .start(
+            runnable::local::boxed_from_fn(room),
+            true,
+            Duration::from_millis(10),
+        )
         .await?;
     let conn_sup = ctx
         .start(
-            Local::actor((conn_sup, (room,))),
+            runnable::local::boxed_from_fn((conn_sup, (room,))),
             true,
             Duration::from_millis(10),
         )
         .await?;
     let _acceptor = ctx
         .start(
-            Local::actor((acceptor, (conn_sup, "127.0.0.1:8989".parse().unwrap()))),
+            runnable::local::boxed_from_fn((
+                acceptor,
+                (conn_sup, "127.0.0.1:8989".parse().unwrap()),
+            )),
             true,
             Duration::from_secs(3),
         )
@@ -280,6 +288,6 @@ fn main() {
     });
     Rt::create(Default::default())
         .expect("Rt::create")
-        .run(Local::actor(main_actor))
+        .run(runnable::local::boxed_from_fn(main_actor))
         .expect("Rt::run");
 }

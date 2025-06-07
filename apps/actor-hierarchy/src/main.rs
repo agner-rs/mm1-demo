@@ -4,6 +4,7 @@ use std::time::Duration;
 use mm1::common::error::AnyError;
 use mm1::common::log::info;
 use mm1::core::context::{InitDone, Messaging, Start};
+use mm1::runnable;
 use mm1::runtime::{Local, Rt};
 
 fn main() -> Result<(), AnyError> {
@@ -11,8 +12,8 @@ fn main() -> Result<(), AnyError> {
         use mm1_logger::*;
 
         LoggingConfig {
-            min_log_level:     Level::INFO,
-            log_target_filter: ["mm1_node::*=INFO", "actor_hierarchy=TRACE"]
+            min_log_level:     Level::TRACE,
+            log_target_filter: ["mm1_node::*=DEBUG", "actor_hierarchy=TRACE"]
                 .into_iter()
                 .map(|s| s.parse())
                 .collect::<Result<Vec<_>, _>>()
@@ -24,7 +25,7 @@ fn main() -> Result<(), AnyError> {
     std::io::stdin().read_to_string(&mut config)?;
 
     let config = serde_yaml::from_str(&config)?;
-    Rt::create(config)?.run(Local::actor(main_actor))?;
+    Rt::create(config)?.run(runnable::local::boxed_from_fn(main_actor))?;
 
     Ok(())
 }
@@ -34,10 +35,18 @@ where
     C: Start<Local>,
 {
     info!("main_actor @ {:?}", std::thread::current().name());
-    ctx.start(Local::actor(child_1), false, Duration::from_millis(1))
-        .await?;
-    ctx.start(Local::actor(child_2), false, Duration::from_millis(1))
-        .await?;
+    ctx.start(
+        runnable::local::boxed_from_fn(child_1),
+        false,
+        Duration::from_millis(1),
+    )
+    .await?;
+    ctx.start(
+        runnable::local::boxed_from_fn(child_2),
+        false,
+        Duration::from_millis(1),
+    )
+    .await?;
     Ok(())
 }
 
@@ -47,12 +56,24 @@ where
 {
     info!("1 @ {:?}", std::thread::current().name());
 
-    ctx.start(Local::actor(child_a), false, Duration::from_millis(1))
-        .await?;
-    ctx.start(Local::actor(child_b), false, Duration::from_millis(1))
-        .await?;
-    ctx.start(Local::actor(child_c), false, Duration::from_millis(1))
-        .await?;
+    ctx.start(
+        runnable::local::boxed_from_fn(child_a),
+        false,
+        Duration::from_millis(1),
+    )
+    .await?;
+    ctx.start(
+        runnable::local::boxed_from_fn(child_b),
+        false,
+        Duration::from_millis(1),
+    )
+    .await?;
+    ctx.start(
+        runnable::local::boxed_from_fn(child_c),
+        false,
+        Duration::from_millis(1),
+    )
+    .await?;
 
     ctx.init_done(ctx.address()).await;
 
@@ -65,12 +86,24 @@ where
 {
     info!("2 @ {:?}", std::thread::current().name());
 
-    ctx.start(Local::actor(child_a), false, Duration::from_millis(1))
-        .await?;
-    ctx.start(Local::actor(child_b), false, Duration::from_millis(1))
-        .await?;
-    ctx.start(Local::actor(child_c), false, Duration::from_millis(1))
-        .await?;
+    ctx.start(
+        runnable::local::boxed_from_fn(child_a),
+        false,
+        Duration::from_millis(1),
+    )
+    .await?;
+    ctx.start(
+        runnable::local::boxed_from_fn(child_b),
+        false,
+        Duration::from_millis(1),
+    )
+    .await?;
+    ctx.start(
+        runnable::local::boxed_from_fn(child_c),
+        false,
+        Duration::from_millis(1),
+    )
+    .await?;
 
     ctx.init_done(ctx.address()).await;
 

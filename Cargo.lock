@@ -40,18 +40,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "async-channel"
-version = "2.3.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "89b47800b0be77592da0afd425cc03468052844aff33b84e33cc696f64e77b6a"
-dependencies = [
- "concurrent-queue",
- "event-listener-strategy",
- "futures-core",
- "pin-project-lite",
-]
-
-[[package]]
 name = "atty"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -123,21 +111,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "concurrent-queue"
-version = "2.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4ca0197aee26d1ae37445ee532fefce43251d24cc7c166799f4d46817f1d3973"
-dependencies = [
- "crossbeam-utils",
-]
-
-[[package]]
-name = "crossbeam-utils"
-version = "0.8.21"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d0a5c400df2834b80a4c3327b3aad3a4c4cd4de0629063962b03235697506a28"
-
-[[package]]
 name = "derive_more"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -182,27 +155,6 @@ name = "equivalent"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
-
-[[package]]
-name = "event-listener"
-version = "5.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3492acde4c3fc54c845eaab3eed8bd00c7a7d881f78bfc801e43a93dec1331ae"
-dependencies = [
- "concurrent-queue",
- "parking",
- "pin-project-lite",
-]
-
-[[package]]
-name = "event-listener-strategy"
-version = "0.5.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8be9f3dfaaffdae2972880079a491a1a8bb7cbed0b8dd7a347f668b4150a3b93"
-dependencies = [
- "event-listener",
- "pin-project-lite",
-]
 
 [[package]]
 name = "futures"
@@ -413,6 +365,7 @@ dependencies = [
  "mm1-proto-sup",
  "mm1-proto-system",
  "mm1-proto-timer",
+ "mm1-runnable",
  "mm1-sup",
  "mm1-timer",
 ]
@@ -458,6 +411,7 @@ dependencies = [
  "mm1-proc-macros",
  "mm1-proto",
  "mm1-proto-system",
+ "thiserror",
  "tokio",
  "tracing",
 ]
@@ -475,21 +429,59 @@ dependencies = [
 ]
 
 [[package]]
+name = "mm1-multinode"
+version = "0.6.1"
+dependencies = [
+ "mm1-address",
+ "mm1-ask",
+ "mm1-common",
+ "mm1-core",
+ "mm1-proto-ask",
+ "mm1-proto-network-management",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
+name = "mm1-name-service"
+version = "0.6.1"
+dependencies = [
+ "either",
+ "mm1-address",
+ "mm1-ask",
+ "mm1-common",
+ "mm1-core",
+ "mm1-proto-ask",
+ "mm1-proto-named",
+ "mm1-proto-well-known",
+ "slotmap",
+ "tokio",
+]
+
+[[package]]
 name = "mm1-node"
 version = "0.6.1"
 dependencies = [
- "async-channel",
+ "derive_more",
  "either",
  "futures",
  "mm1-address",
+ "mm1-ask",
  "mm1-common",
  "mm1-core",
+ "mm1-multinode",
+ "mm1-name-service",
  "mm1-proto",
+ "mm1-proto-network-management",
  "mm1-proto-system",
+ "mm1-proto-well-known",
+ "mm1-runnable",
  "num_cpus",
  "pin-project",
  "scc",
  "serde",
+ "serde_json",
  "thiserror",
  "tokio",
  "tracing",
@@ -522,6 +514,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "mm1-proto-named"
+version = "0.6.1"
+dependencies = [
+ "mm1-address",
+ "mm1-common",
+ "mm1-proto",
+]
+
+[[package]]
+name = "mm1-proto-network-management"
+version = "0.6.1"
+dependencies = [
+ "mm1-address",
+ "mm1-common",
+ "mm1-proto",
+ "serde_json",
+]
+
+[[package]]
 name = "mm1-proto-sup"
 version = "0.6.1"
 dependencies = [
@@ -549,6 +560,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "mm1-proto-well-known"
+version = "0.6.1"
+dependencies = [
+ "mm1-address",
+]
+
+[[package]]
+name = "mm1-runnable"
+version = "0.6.1"
+dependencies = [
+ "futures",
+ "mm1-address",
+ "mm1-common",
+ "mm1-core",
+ "mm1-proc-macros",
+ "mm1-proto",
+ "mm1-proto-system",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
 name = "mm1-sup"
 version = "0.6.1"
 dependencies = [
@@ -561,6 +594,7 @@ dependencies = [
  "mm1-proto-ask",
  "mm1-proto-sup",
  "mm1-proto-system",
+ "mm1-runnable",
  "parking_lot",
  "thiserror",
  "tokio",
@@ -619,12 +653,6 @@ name = "overload"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
-
-[[package]]
-name = "parking"
-version = "2.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f38d5652c16fde515bb1ecef450ab0f6a219d619a7274976324d5e377f7dceba"
 
 [[package]]
 name = "parking_lot"
@@ -786,6 +814,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_json"
+version = "1.0.140"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "20068b6e96dc6c9bd23e01df8827e6c7e1f2fddd43c21810382803c136b99373"
+dependencies = [
+ "itoa",
+ "memchr",
+ "ryu",
+ "serde",
+]
+
+[[package]]
 name = "serde_yaml"
 version = "0.9.34+deprecated"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -825,6 +865,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f92a496fb766b417c996b9c5e57daf2f7ad3b0bebe1ccfca4856390e3d3bb67"
 dependencies = [
  "autocfg",
+]
+
+[[package]]
+name = "slotmap"
+version = "1.0.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dbff4acf519f630b3a3ddcfaea6c06b42174d9a44bc70c620e9ed1649d58b82a"
+dependencies = [
+ "version_check",
 ]
 
 [[package]]

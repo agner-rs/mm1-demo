@@ -1,12 +1,24 @@
-subnet: <cafe:>/16
+codecs:
+  - name: full
 
 subnets:
-  default:
-    network: <cafe:>/16
+  - net_address: <cafe:>/16
+    type: local
+  
+  - net_address: <decaf:>/20
+    type: remote
+    codec: full
+  
+  - net_address: <bad:>/12
+    type: remote
+    codec: full
 
 runtime:
   default:
     worker_threads: 2
+  
+  system:
+    worker_threads: 1
   
   one:
     worker_threads: 1
@@ -21,13 +33,21 @@ actor:
   inbox_size: 128
   fork_inbox_size: 16
   /:
+    mm1_name_service::server::name_server_actor:
+      netmask: 60
+      runtime: system
+    mm1_multinode::network_manager::network_manager_actor:
+      netmask: 60
+      runtime: system
     _:
       runtime: three
-      /:
+      /:  
         actor_hierarchy::child_1:
           runtime: one
+          netmask: 52
           /:
             actor_hierarchy::child_a:
+              netmask: 48
               runtime: three
         actor_hierarchy::child_2:
           runtime: two
