@@ -8,10 +8,18 @@ subnets:
   - net_address: <decaf:>/20
     type: remote
     codec: full
+    protocol: wip
+    link:
+      bind: 127.0.0.1:12001
+      peer: 127.0.0.1:12002
   
   - net_address: <bad:>/12
     type: remote
     codec: full
+    protocol: wip
+    link:
+      bind: 127.0.0.1:12002
+      peer: 127.0.0.1:12001
 
 runtime:
   default:
@@ -35,6 +43,9 @@ actor:
   /:
     mm1_name_service::server::name_server_actor:
       netmask: 60
+      runtime: system
+    mm1_multinode::remote_subnet::sup::run:
+      netmask: 40
       runtime: system
     mm1_multinode::network_manager::network_manager_actor:
       netmask: 60

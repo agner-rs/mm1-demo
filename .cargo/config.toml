@@ -1,3 +1,2 @@
 [patch.crates-io]
-# mm1 = { path = "../mm1/crates/mm1" }
-# mm1-logger = { path = "../mm1/crates/mm1-logger" }
+# mm1 = { path = "../mm1" }
