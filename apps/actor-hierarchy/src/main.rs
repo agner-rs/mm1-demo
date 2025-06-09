@@ -3,7 +3,7 @@ use std::time::Duration;
 
 use mm1::common::error::AnyError;
 use mm1::common::log::info;
-use mm1::core::context::{InitDone, Messaging, Start};
+use mm1::core::context::{InitDone, Messaging, Start, Tell};
 use mm1::message_codec::Codec;
 use mm1::proto::message;
 use mm1::runnable;
@@ -40,7 +40,7 @@ fn main() -> Result<(), AnyError> {
 
 async fn main_actor<C>(ctx: &mut C) -> Result<(), AnyError>
 where
-    C: Start<Local>,
+    C: Start<Local> + Messaging,
 {
     info!("main_actor @ {:?}", std::thread::current().name());
     ctx.start(
@@ -55,6 +55,8 @@ where
         Duration::from_millis(1),
     )
     .await?;
+
+    ctx.tell("<bad:13>".parse().unwrap(), AMessage).await?;
 
     std::future::pending().await
 }

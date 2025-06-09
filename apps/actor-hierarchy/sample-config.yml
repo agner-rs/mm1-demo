@@ -9,6 +9,7 @@ subnets:
     type: remote
     codec: full
     protocol: wip
+    serde: bincode
     link:
       bind: 127.0.0.1:12001
       peer: 127.0.0.1:12002
@@ -17,6 +18,7 @@ subnets:
     type: remote
     codec: full
     protocol: wip
+    serde: bincode
     link:
       bind: 127.0.0.1:12002
       peer: 127.0.0.1:12001

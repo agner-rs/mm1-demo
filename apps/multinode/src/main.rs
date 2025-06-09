@@ -1,10 +1,9 @@
-
 use std::time::Duration;
 
 use futures::never::Never;
-use mm1::common::log;
 use mm1::address::Address;
 use mm1::common::error::AnyError;
+use mm1::common::log;
 use mm1::common::log::info;
 use mm1::core::context::{Messaging, Tell};
 use mm1::core::envelope::dispatch;
@@ -132,7 +131,7 @@ where
         let AMessage { reply_to, idx } = dispatch!(match envelope {
             m @ AMessage { .. } => m,
         });
-        
+
         time::sleep(Duration::from_secs(1)).await;
 
         ctx.tell(
