@@ -149,5 +149,5 @@ where
 }
 
 #[message]
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Debug)]
 struct AMessage;

@@ -4,14 +4,15 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use mm1::address::Address;
-use mm1::ask::proto::simple::Request;
+use mm1::ask::proto::Request;
 use mm1::ask::{Ask, Reply};
 use mm1::common::error::AnyError;
 use mm1::common::log::*;
+use mm1::common::Never;
 use mm1::core::context::{Fork, InitDone, Linking, Messaging, Quit, Start, Stop, Tell, Watching};
 use mm1::core::envelope::dispatch;
 use mm1::proto::sup::uniform;
-use mm1::proto::{system, Unique};
+use mm1::proto::system;
 use mm1::runnable;
 use mm1::runtime::{Local, Rt};
 use mm1::sup::common::{ChildSpec, ChildType, InitType};
@@ -118,20 +119,17 @@ where
         let _: uniform::StartResponse = ctx
             .ask(
                 conn_sup,
-                uniform::StartRequest {
-                    args: Unique::new(io),
-                },
+                uniform::StartRequest { args: io },
                 Duration::from_secs(3),
             )
             .await?;
     }
 }
 
-async fn conn<C>(ctx: &mut C, room: Address, io: Unique<TcpStream>) -> Result<(), AnyError>
+async fn conn<C>(ctx: &mut C, room: Address, io: TcpStream) -> Result<Never, AnyError>
 where
     C: Messaging + InitDone + Ask + Quit + Fork + Ask,
 {
-    let io = io.take().expect("stolen IO");
     async fn upstream<C>(
         ctx_up: &mut C,
         room: Address,
@@ -148,7 +146,7 @@ where
             }
             let message: Arc<[u8]> = read_buf[..byte_count].into();
             ctx_up
-                .ask(room, protocol::Post { message }, Duration::from_secs(3))
+                .ask::<_, ()>(room, protocol::Post { message }, Duration::from_secs(3))
                 .await?;
         }
     }

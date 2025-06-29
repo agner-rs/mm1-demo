@@ -9,6 +9,8 @@ subnets:
     type: remote
     codec: full
     protocol: wip
+    authc:
+      shared_secret: yes-this-is-the-correct-cluster!
     serde: bincode
     link:
       bind: 127.0.0.1:12001
@@ -18,6 +20,8 @@ subnets:
     type: remote
     codec: full
     protocol: wip
+    authc:
+      shared_secret: yes-this-is-the-correct-cluster!
     serde: bincode
     link:
       bind: 127.0.0.1:12002

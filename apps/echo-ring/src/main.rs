@@ -2,10 +2,11 @@ use std::collections::VecDeque;
 use std::time::{Duration, Instant};
 
 use mm1::address::Address;
-use mm1::ask::proto::simple::Request;
+use mm1::ask::proto::Request;
 use mm1::ask::{Ask, Reply};
 use mm1::common::error::AnyError;
 use mm1::common::log::*;
+use mm1::common::Never;
 use mm1::core::context::{Fork, InitDone, Messaging, Quit, Start, Stop, Tell, Watching};
 use mm1::core::envelope::dispatch;
 use mm1::proto::system;
@@ -13,7 +14,7 @@ use mm1::runnable;
 use mm1::runtime::{Local, Rt};
 use tokio::io::{AsyncBufReadExt, BufReader};
 
-async fn main_actor<C>(ctx: &mut C) -> Result<(), AnyError>
+async fn main_actor<C>(ctx: &mut C) -> Result<Never, AnyError>
 where
     C: Quit + Messaging + Tell + Ask + Start<Local> + Stop + Watching + Fork,
 {
@@ -133,7 +134,7 @@ where
                                         let mut response_times = Vec::<Duration>::with_capacity(n);
                                         for _ in 0..n {
                                             let t0 = Instant::now();
-                                            ctx.ask(
+                                            ctx.ask::<_, ()>(
                                                 head,
                                                 protocol::Request,
                                                 Duration::from_secs(5),

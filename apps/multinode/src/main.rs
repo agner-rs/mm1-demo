@@ -55,6 +55,9 @@ fn run_a(tx: oneshot::Sender<Address>) -> Result<(), AnyError> {
               type: remote
               codec: full
               protocol: wip
+              authc:
+                shared_secret: one-two-three
+              serde: rmp
               link:
                 bind: 127.0.0.1:12001
                 peer: 127.0.0.1:12002
@@ -79,6 +82,9 @@ fn run_b(rx: oneshot::Receiver<Address>) -> Result<(), AnyError> {
               type: remote
               codec: full
               protocol: wip
+              authc:
+                shared_secret: one-two-three
+              serde: rmp
               link:
                 bind: 127.0.0.1:12002
                 peer: 127.0.0.1:12001
@@ -145,7 +151,7 @@ where
     }
 }
 
-#[derive(Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Debug)]
 #[message]
 struct AMessage {
     reply_to: Address,
